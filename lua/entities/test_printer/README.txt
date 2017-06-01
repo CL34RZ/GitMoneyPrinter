@@ -1,0 +1,1 @@
+This printer will not show in the f4 menu. I use this for editing the printers for future updates

@@ -18,6 +18,11 @@ surface.CreateFont( "MoneyFont", {
 	outline = false,
 } )
 
+surface.CreateFont("outline", {
+	font = "Arial",
+	size = 70
+	})
+
 surface.CreateFont("PrinterFont", {
 	font = "Arial",
 	size = 40,
@@ -39,7 +44,7 @@ function ENT:Draw()
 
 	ang:RotateAroundAxis(ang:Forward(),-90)
 	cam.Start3D2D(pos+ang:Up()*3.5, ang, 0.1)
-	draw.SimpleTextOutlined("Bronze Printer","PrinterFont",0,0,Color(255,255,255),1,1,2,Color(0,0,0))
+	draw.SimpleTextOutlined("Test Printer","PrinterFont",0,0,Color(255,255,255),1,1,2,Color(0,0,0))
 	cam.End3D2D()
 
 end

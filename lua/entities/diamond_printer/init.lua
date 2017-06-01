@@ -5,14 +5,14 @@ AddCSLuaFile("config.lua")
 include("config.lua")
 include("shared.lua")
 
-local interval = 5
+local interval = moneyTimer
 
 function ENT:Initialize()
 	self:SetModel("models/props_lab/reciever01a.mdl")
 	self:SetMoveType(MOVETYPE_VPHYSICS)
 	self:PhysicsInit(SOLID_VPHYSICS)
 	self:SetSolid(SOLID_VPHYSICS)
-	self:SetColor(Color(153,51,51))
+	self:SetColor(Color(21,85,234))
 
 	self.timer = CurTime()
 end

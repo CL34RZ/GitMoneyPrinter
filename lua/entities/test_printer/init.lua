@@ -12,7 +12,7 @@ function ENT:Initialize()
 	self:SetMoveType(MOVETYPE_VPHYSICS)
 	self:PhysicsInit(SOLID_VPHYSICS)
 	self:SetSolid(SOLID_VPHYSICS)
-	self:SetMaterial("models/player/shared/gold_player")
+	self:SetColor(Color(255,0,0))
 
 	self.timer = CurTime()
 end
