@@ -1,3 +1,6 @@
+-- This printer is for editing for future updates, it will not show in the f4 menu nor will it be in the same folder
+-- as the other printers
+
 AddCSLuaFile("shared.lua")
 AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("config.lua")

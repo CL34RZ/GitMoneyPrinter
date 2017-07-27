@@ -29,17 +29,20 @@ function ENT:Draw()
 
 	local pos = self:GetPos()
 	local ang = self:GetAngles()
+	local owner = LocalPlayer()
+	owner = (IsValid(owner) && owner:Nick()) or "Unknown"
 
 	ang:RotateAroundAxis(ang:Up(), 90)
 	ang:RotateAroundAxis(ang:Forward(), 90)
 
-	cam.Start3D2D(pos+ang:Up()*7.5, ang, 0.1)
+	cam.Start3D2D(pos+ang:Up()*7.2, ang, 0.1)
 	draw.SimpleTextOutlined(GAMEMODE.Config.currency ..self:GetMoneyStored(),"MoneyFont",0,0,Color(255,255,255),1,1,2,Color(0,0,0))
 	cam.End3D2D()
 
 	ang:RotateAroundAxis(ang:Forward(),-90)
-	cam.Start3D2D(pos+ang:Up()*3.5, ang, 0.1)
-	draw.SimpleTextOutlined("Silver Printer","PrinterFont",0,0,Color(255,255,255),1,1,2,Color(0,0,0))
+	cam.Start3D2D(pos+ang:Up()*3.1, ang, 0.1)
+	draw.SimpleTextOutlined("Silver Printer","PrinterFont",0,0-40,Color(255,255,255),1,1,2,Color(0,0,0))
+	draw.SimpleTextOutlined(owner,"ownerFont",0,0,Color(255,255,255),1,1,2,Color(0,0,0))
 	cam.End3D2D()
 
 end
