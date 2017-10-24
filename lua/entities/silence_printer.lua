@@ -26,6 +26,17 @@ if SERVER then
 end
 
 if CLIENT then
+	surface.CreateFont("BigInfo", {
+		font = "quantify",
+		size = 75,
+		antialias = true
+	})
+
+	surface.CreateFont("SmallInfo", {
+		font = "quantify",
+		size = 55,
+		antialias = true
+	})
 	function ENT:Draw()
 		self:DrawModel()
 

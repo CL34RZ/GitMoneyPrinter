@@ -37,6 +37,7 @@ if SERVER then
 		self:SetColor(PrinterColor)
 		self:SetUseType(SIMPLE_USE)
 		self:SetHealth(150)
+		self.cl_silenced = false
 		self.intvl = CurTime()
 		if self.PrinterMakesNoise then
 			self:EmitSound("noise_Loop")
@@ -48,6 +49,9 @@ if SERVER then
 			self.intvl = CurTime()
 			self:SetDiamondStored(self:GetDiamondStored()+PrinterMade)
 		end
+		if self:WaterLevel() >= 3 then
+			self:Remove()
+		end
 	end
 
 	function ENT:Use(act,ply)
@@ -55,7 +59,7 @@ if SERVER then
 		if IsValid(ply) && ply:IsPlayer() && money > 0 then
 			self:SetDiamondStored(0)
 			ply:addMoney(money)
-			DarkRP.notify(ply,0,4,"You have picked up ".. GAMEMODE.Config.currency .. money .."!")
+			DarkRP.notify(ply,0,4,"You have picked up ".. GAMEMODE.Config.currency .. string.Comma(money) .."!")
 		end
 	end
 
@@ -67,9 +71,12 @@ if SERVER then
 	end
 
 	function ENT:Touch(ent)
-		if ent.IsSilencer && self.PrinterMakesNoise then
-			ent:Remove()
-			self:StopSound("noise_loop")
+		if ent.IsSilencer and self.PrinterMakesNoise then
+			if not self.cl_silenced then
+				ent:Remove()
+				self:StopSound("noise_loop")
+				self.cl_silenced = true
+			end
 		end
 	end
 
@@ -88,24 +95,23 @@ end
 
 if CLIENT then
 	surface.CreateFont("BigInfo", {
-		font = "Impact",
+		font = "quantify",
 		size = 75,
 		antialias = true
 	})
 
 	surface.CreateFont("SmallInfo", {
-		font = "Impact",
-		size = 55,
+		font = "quantify",
+		size = 45,
 		antialias = true
 	})
-
 	function ENT:Draw()
 		self:DrawModel()
 		local Owner = self:Getowning_ent()
 		if IsValid(Owner) and Owner:Nick() then 
 			Owner = Owner:Nick()
-			if string.len(Owner) > 7 then
-				Owner = string.Left( Owner, 7 ).."..."
+			if string.len(Owner) > 11 then
+				Owner = string.Left( Owner, 11 ).."..."
 			end
 		else 
 			Owner = "Unknown" 
@@ -114,45 +120,23 @@ if CLIENT then
 
 		local pos = self:GetPos()
 		local ang = self:GetAngles()
-		local MoneyText = GAMEMODE.Config.currency..self:GetDiamondStored()
-		local MoneyBoxSize = select(1,surface.GetTextSize(MoneyText))
+		local MoneyText = string.Left(GAMEMODE.Config.currency..string.Comma(self:GetDiamondStored()),7)
 		local NameText = Owner
 
 		ang:RotateAroundAxis(ang:Up(),90)
 
 		cam.Start3D2D(pos+ang:Up()*10.6,ang,0.1)
-			surface.SetDrawColor(Color(120,120,120,120))
-			surface.DrawRect(-85,-140,MoneyBoxSize+10,75)
-			
-			surface.SetFont("BigInfo")
-			-- Bottom left of outline
-			surface.SetTextColor(Color(0,0,0))
-			surface.SetTextPos(-80,-142)
-			surface.DrawText(MoneyText)
-			-- Top right of outline
-			surface.SetTextPos(-84,-146)
-			surface.SetTextColor(0,0,0)
-			surface.DrawText(MoneyText)
-			-- Main white text
-			surface.SetTextPos(-82,-144)
-			surface.SetTextColor(255,255,255)
-			surface.DrawText(MoneyText)
-
-			-- Drawing rectangle for name to sit in
-			surface.DrawRect(-105,0,select(1,surface.GetTextSize(NameText)),select(2,surface.GetTextSize(NameText)))
-			-- Drawing player's name
-			surface.SetFont("SmallInfo")
-			surface.SetTextPos(-100,0)
-			surface.DrawText(NameText)
+			draw.RoundedBox(0,-125,-140,260,85,Color(94,94,94,120))
+			draw.SimpleTextOutlined(MoneyText,"BigInfo",-120,-100,Color(255,255,255),0,1,2,Color(0,0,0))
+			draw.RoundedBox(0,-125,-25,260,85,Color(94,94,94,120))
+			draw.SimpleTextOutlined(NameText,"SmallInfo",-120,15,Color(255,255,255),0,1,2,Color(0,0,0))
 		cam.End3D2D()
 
 		ang:RotateAroundAxis(ang:Forward(),90)
 
 		cam.Start3D2D(pos+ang:Up()*17,ang,0.1)
-			surface.DrawRect(-150,-100,select(1,surface.GetTextSize(PrinterName),select(2,surface.GetTextSize(PrinterName))))
-			surface.SetTextPos(-150,-100)
-			surface.DrawText(PrinterName)
+			draw.RoundedBox(0,-150,-110,308,106,Color(94,94,94,120))
+			draw.SimpleTextOutlined(string.Left(PrinterName,16),"SmallInfo",-145,-85,Color(255,255,255),0,0,2,Color(0,0,0))
 		cam.End3D2D()
-
 	end
 end
